@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class ArticleTableViewController: UITableViewController, ArticlesUpdaterDelegate {
+class ArticleTableViewController: UITableViewController {
     
     let articlesUpdater = ArticlesUpdater()
     var articlesForDate: [ArticlesForDate] = [] {
@@ -23,7 +23,6 @@ class ArticleTableViewController: UITableViewController, ArticlesUpdaterDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "New York Times Top Stories"
-        articlesUpdater.delegate = self
         refreshControl = UIRefreshControl()
         refreshControl?.attributedTitle = NSAttributedString(string: "Fetching NYT Top Stories...")
         refreshControl?.addTarget(self, action:#selector(refreshData), for: .valueChanged)
@@ -36,10 +35,10 @@ class ArticleTableViewController: UITableViewController, ArticlesUpdaterDelegate
     }
 
     @objc func refreshData() {
-        articlesUpdater.fetchArticlesFromWebAndSave(inContext: container!.viewContext)
+        articlesUpdater.fetchArticlesFromWebAndSave(inContext: container!.viewContext, completion: self.updateDidFinish)
     }
     
-    func updateDidFinish() {
+    func updateDidFinish() -> Void {
         articlesForDate = articlesUpdater.fetchAllArticlesFromDatabaseGrouppedByDate(inContext: container!.viewContext)
     }
     

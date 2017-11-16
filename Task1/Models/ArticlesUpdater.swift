@@ -16,7 +16,7 @@ class ArticlesUpdater {
     let apiKey = "a699c7ec6336482e83c7e5800d6e2265"
     var delegate : ArticlesUpdaterDelegate?
     
-    func fetchArticlesFromWebAndSave(inContext context: NSManagedObjectContext) {
+    func fetchArticlesFromWebAndSave(inContext context: NSManagedObjectContext, completion: @escaping () -> Void) {
         let url = URL(string: topStoriesURL)
         var request: URLRequest = URLRequest(url: url!)
         request.setValue(apiKey, forHTTPHeaderField: "api-key")
@@ -54,7 +54,7 @@ class ArticlesUpdater {
                                     }
                                 }
                             }
-                            self.delegate?.updateDidFinish()
+                            completion()
                         }
                     }
                 }
@@ -158,15 +158,5 @@ class ArticlesUpdater {
 }
 
 protocol ArticlesUpdaterDelegate {
-    func updateDidFinish()
     func imageFetched(data: Data)
-}
-
-extension ArticlesUpdaterDelegate {
-    func updateDidFinish() {
-        
-    }
-    func imageFetched(data: Data) {
-        
-    }
 }
